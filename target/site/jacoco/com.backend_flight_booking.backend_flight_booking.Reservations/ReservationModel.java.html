@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReservationModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">backend_flight_booking</a> &gt; <a href="index.source.html" class="el_package">com.backend_flight_booking.backend_flight_booking.Reservations</a> &gt; <span class="el_source">ReservationModel.java</span></div><h1>ReservationModel.java</h1><pre class="source lang-java linenums">package com.backend_flight_booking.backend_flight_booking.Reservations;
+
+import com.backend_flight_booking.backend_flight_booking.Seats.SeatModel;
+import com.backend_flight_booking.backend_flight_booking.Users.UserModel;
+import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.ZonedDateTime;
+
+@Entity
+@Table(name = &quot;reservations&quot;)
+@Getter
+<span class="nc" id="L15">@Setter</span>
+<span class="nc bnc" id="L16" title="All 62 branches missed.">@EqualsAndHashCode</span>
+<span class="fc" id="L17">public class ReservationModel {</span>
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<span class="nc" id="L20">    private Long id;</span>
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;user_id&quot;)
+<span class="nc" id="L24">    private UserModel user;</span>
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;seat_id&quot;)
+<span class="nc" id="L28">    private SeatModel seat;</span>
+
+    @Column
+<span class="nc" id="L31">    private String reservationCode;</span>
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+<span class="nc" id="L35">    private ReservationStatus reservationStatus;</span>
+
+    @Column(nullable = false)
+<span class="nc" id="L38">    private ZonedDateTime bookingDate;</span>
+
+    @Column(nullable = false)
+<span class="nc" id="L41">    private Boolean status;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
