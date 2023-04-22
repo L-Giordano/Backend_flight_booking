@@ -1,0 +1,8 @@
+/Users/lgiordano/flight_booking_app/Backend_flight_booking/src/main/java/com/backend_flight_booking/backend_flight_booking/Flights/FlightModel.java
+/Users/lgiordano/flight_booking_app/Backend_flight_booking/src/main/java/com/backend_flight_booking/backend_flight_booking/Reservations/ReservationStatus.java
+/Users/lgiordano/flight_booking_app/Backend_flight_booking/src/main/java/com/backend_flight_booking/backend_flight_booking/Seats/SeatModel.java
+/Users/lgiordano/flight_booking_app/Backend_flight_booking/src/main/java/com/backend_flight_booking/backend_flight_booking/Users/UserModel.java
+/Users/lgiordano/flight_booking_app/Backend_flight_booking/src/main/java/com/backend_flight_booking/backend_flight_booking/Reservations/ReservationModel.java
+/Users/lgiordano/flight_booking_app/Backend_flight_booking/src/main/java/com/backend_flight_booking/backend_flight_booking/Seats/SeatType.java
+/Users/lgiordano/flight_booking_app/Backend_flight_booking/src/main/java/com/backend_flight_booking/backend_flight_booking/Seats/SeatStatus.java
+/Users/lgiordano/flight_booking_app/Backend_flight_booking/src/main/java/com/backend_flight_booking/backend_flight_booking/BackendFlightBookingApplication.java

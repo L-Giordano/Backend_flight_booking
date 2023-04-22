@@ -6,23 +6,16 @@ on:
       - master
 
 jobs:
-  run-all-tests:
+  codeclimate-analysis:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Java
-        uses: actions/setup-java@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2
         with:
-          java-version: 17
+          java-version: '17'
           distribution: 'adopt'
-
-      - name: Set up Maven
-        uses: stCarolas/setup-maven@v4.4
-        with:
-          maven-version: 3.8.2
-
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         env:
