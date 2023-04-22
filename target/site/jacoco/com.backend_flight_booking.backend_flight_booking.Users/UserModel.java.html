@@ -14,12 +14,12 @@ import java.util.List;
 
 
 @Entity
-<span class="nc bnc" id="L17" title="All 70 branches missed.">@Getter @Setter@EqualsAndHashCode</span>
+<span class="pc bnc" id="L17" title="All 70 branches missed.">@Getter @Setter@EqualsAndHashCode</span>
 @Table(name = &quot;users&quot;)
 <span class="fc" id="L19">public class UserModel {</span>
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<span class="nc" id="L22">    private Long id;</span>
+<span class="fc" id="L22">    private Long id;</span>
 
     @Column(nullable = false)
 <span class="nc" id="L25">    private String firstName;</span>
@@ -44,6 +44,6 @@ import java.util.List;
 <span class="nc" id="L44">    private List&lt;ReservationModel&gt; reservation = new ArrayList&lt;&gt;();</span>
 
     @Column
-<span class="nc" id="L47">    private Boolean status;</span>
+<span class="fc" id="L47">    private Boolean status;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
