@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 <span class="nc" id="L17">@Setter</span>
 <span class="nc bnc" id="L18" title="All 94 branches missed.">@EqualsAndHashCode</span>
-<span class="fc" id="L19">public class FlightModel {</span>
+<span class="nc" id="L19">public class FlightModel {</span>
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 <span class="nc" id="L22">    private Long id;</span>
@@ -27,7 +27,7 @@ import java.util.List;
     @Column(nullable = false)
 <span class="nc" id="L28">    private String flightCode;</span>
 
-<span class="fc" id="L30">    @OneToMany(mappedBy = &quot;flight&quot;, cascade = CascadeType.ALL, orphanRemoval = true)</span>
+<span class="nc" id="L30">    @OneToMany(mappedBy = &quot;flight&quot;, cascade = CascadeType.ALL, orphanRemoval = true)</span>
 <span class="nc" id="L31">    private List&lt;SeatModel&gt; seats = new ArrayList&lt;&gt;();</span>
 
     @Column(nullable = false)
