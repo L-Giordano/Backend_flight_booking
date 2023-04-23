@@ -6,4 +6,5 @@ backend_flight_booking,com.backend_flight_booking.backend_flight_booking.Seats,S
 backend_flight_booking,com.backend_flight_booking.backend_flight_booking.Seats,SeatModel,334,3,70,0,10,1,54,1,19,1
 backend_flight_booking,com.backend_flight_booking.backend_flight_booking.Seats,SeatStatus,0,27,0,0,0,5,0,1,0,1
 backend_flight_booking,com.backend_flight_booking.backend_flight_booking,BackendFlightBookingApplication,5,3,0,0,2,1,1,1,1,1
-backend_flight_booking,com.backend_flight_booking.backend_flight_booking.Users,UserModel,334,8,70,0,9,2,54,1,19,1
+backend_flight_booking,com.backend_flight_booking.backend_flight_booking.Users,UserModel,308,34,70,0,6,5,47,8,12,8
+backend_flight_booking,com.backend_flight_booking.backend_flight_booking.Users,UserService,0,24,0,0,0,7,0,2,0,2
