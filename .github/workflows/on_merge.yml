@@ -1,11 +1,13 @@
-name: only-tests
+name: Merge_to_main
 on:
-  merge:
-    branches:
-      - main
-
+  pull_request:
+    types:
+      - closed
+if_merged:
+  if: github.event.pull_request.merged == true
 jobs:
-  run-all-tests:
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
