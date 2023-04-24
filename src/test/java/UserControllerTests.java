@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -58,7 +57,7 @@ public class UserControllerTests {
     @Test
     public void testWhenCreateUserSuccess(){
 
-        UserModel user = this.setupUserModelForBody(1l);
+        UserModel user = this.setupUserModelForBody(1L);
         URI uri = URI.create(String.format("localHost:8080/users/%s", user.getId()));
 
         when(userService.createUser(user)).thenReturn(uri);
@@ -87,7 +86,7 @@ public class UserControllerTests {
         Long id = 1L;
         UserBasicInfoDTO userBasicInfoDTO = this.setupUserBasicInfoDTO();
 
-        when(userService.getActiveUserById(id)).thenReturn(userBasicInfoDTO);
+        when(userService.getUserById(id)).thenReturn(userBasicInfoDTO);
 
         ResponseEntity<Object> expected = ResponseEntity.ok(userBasicInfoDTO);
         ResponseEntity<Object> result = userController.getUser(id);
@@ -98,9 +97,8 @@ public class UserControllerTests {
     @Test
     public void testWhenGetUserByIdNoFound() throws UserIdNotFoundException {
         Long id = 1L;
-        UserBasicInfoDTO userBasicInfoDTO = this.setupUserBasicInfoDTO();
 
-        when(userService.getActiveUserById(id)).thenThrow(UserIdNotFoundException.class);
+        when(userService.getUserById(id)).thenThrow(UserIdNotFoundException.class);
 
         ResponseEntity<Object> expected = ResponseEntity.badRequest().build();
         ResponseEntity<Object> result = userController.getUser(id);
@@ -113,7 +111,7 @@ public class UserControllerTests {
     public void testWhenGetUserByIdHasInternalServerError() throws UserIdNotFoundException {
         Long id = 1L;
 
-        when(userService.getActiveUserById(id)).thenThrow(IllegalArgumentException.class);
+        when(userService.getUserById(id)).thenThrow(IllegalArgumentException.class);
 
         ResponseEntity<Object> expected = ResponseEntity.internalServerError().build();
         ResponseEntity<Object> result = userController.getUser(id);
@@ -183,12 +181,12 @@ public class UserControllerTests {
 
         doThrow(
                 new UserIdNotFoundException(
-                        String.format("User Id %s not Found", id.toString())))
+                        String.format("User Id %s not Found", id)))
                 .when(userService).deleteUser(id);
 
         ResponseEntity<Object> expected = ResponseEntity
                 .badRequest()
-                .body(String.format("User Id %s not Found", id.toString()));
+                .body(String.format("User Id %s not Found", id));
         ResponseEntity<Object> result = userController.deleteUser(id);
 
         assertEquals(expected, result);

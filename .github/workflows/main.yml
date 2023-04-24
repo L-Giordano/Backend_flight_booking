@@ -1,0 +1,28 @@
+name: only-tests
+on:
+  push:
+    branches:
+      - main
+jobs:
+  codeclimate-analysis:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          # Set CC_TEST_REPORTER_ID as secret of your repo
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+          JACOCO_SOURCE_PATH: "${{github.workspace}}/src/main/java"
+
+        with:
+          # The report file must be there, otherwise Code Climate won't find it
+          coverageCommand: mvn test
+          coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco

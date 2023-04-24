@@ -53,7 +53,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUser(@PathVariable Long id) {
         try {
-            UserBasicInfoDTO userResponse = userService.getActiveUserById(id);
+            UserBasicInfoDTO userResponse = userService.getUserById(id);
             return ResponseEntity.ok(userResponse);
         }catch (UserIdNotFoundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
