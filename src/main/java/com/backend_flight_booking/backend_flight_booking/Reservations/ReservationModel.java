@@ -37,6 +37,4 @@ public class ReservationModel {
     @Column(nullable = false)
     private ZonedDateTime bookingDate;
 
-    @Column(nullable = false)
-    private Boolean status;
 }
