@@ -1,28 +1,33 @@
-name: only-tests
+name: CodeClimate Coverage
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  codeclimate-analysis:
+  codeclimate-coverage:
+    name: Upload to CodeClimate
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Setup JDK
+
+      - name: Setup Java
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.2.0
-        env:
-          # Set CC_TEST_REPORTER_ID as secret of your repo
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-          JACOCO_SOURCE_PATH: "${{github.workspace}}/src/main/java"
 
+      - name: Build with Maven
+        run: mvn clean install -DskipTests=true
+
+      - name: Generate Jacoco Report
+        run: mvn test jacoco:report
+
+      - name: Upload Coverage to CodeClimate
+        uses: codeclimate/test-reporter-action@v2.2.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          # The report file must be there, otherwise Code Climate won't find it
-          coverageCommand: mvn test
-          coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
+          coverage_files: ./target/site/jacoco/jacoco.xml
