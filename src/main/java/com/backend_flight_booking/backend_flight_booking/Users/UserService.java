@@ -4,13 +4,14 @@ import com.backend_flight_booking.backend_flight_booking.Exceptions.UserIdNotFou
 import com.backend_flight_booking.backend_flight_booking.Users.DTO.UserBasicInfoDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
 
-
+@Service
 public class UserService {
 
     @Autowired
@@ -29,12 +30,11 @@ public class UserService {
                 .toUri();
     }
 
-    public UserBasicInfoDTO getActiveUserById(Long id) throws UserIdNotFoundException {
-        Optional<UserModel> userOptional = userRepository.findById(id);
-        if(userOptional.isEmpty()){
-            throw new UserIdNotFoundException(String.format("User Id %s not Found", id));
-        }
-        return modelMapper.map(userOptional.get(), UserBasicInfoDTO.class);
+    public UserBasicInfoDTO getUserById(Long id) throws UserIdNotFoundException {
+        UserModel userModel = userRepository.findById(id)
+                .orElseThrow(() -> new UserIdNotFoundException("User with ID " + id + " not found"));
+
+        return modelMapper.map(userModel, UserBasicInfoDTO.class);
     }
 
     @Transactional
