@@ -1,5 +1,20 @@
 version: "3.9"
 services:
+    fboking:
+        image: prueba_spring2
+        ports:
+            - "8080:8080"
+        environment:
+            - FBOOKING_DB_NAME=${FBOOKING_DB_NAME}
+            - FBOOKING_DB_USER=${FBOOKING_DB_USER}
+            - FBOOKING_DB_PASSWORD=${FBOOKING_DB_PASSWORD}
+            - MYSQL_RANDOM_ROOT_PASSWORD=1
+            - DB_HOST=django-db
+        depends_on:
+            - django-db
+        links:
+            - django-db
+
     django-db:
         image: mysql:5.7
         ports:
@@ -11,3 +26,5 @@ services:
             - MYSQL_RANDOM_ROOT_PASSWORD=1
         volumes:
             - ../mysql-volume:/var/lib/mysql
+
+
