@@ -24,9 +24,6 @@ jobs:
               aws s3 cp s3://f-booking-terraform-remote-state/ecr-fb-state/terraform.tfstate .
               export ECR_REPOSITORY=$(aws terraform output -json -state=terraform.tfstate ecr-repository_name | jq -r '.value')
 
-              aws s3 cp s3://f-booking-terraform-remote-state/ecr-fb-state/terraform.tfstate .
-              export ECR_REGISTRY=$(aws terraform output -json -state=terraform.tfstate ecr-repository_url | jq -r '.value')
-
               aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
               export ECS_SERVICE=$(aws terraform output -json -state=terraform.tfstate ecs_service_name | jq -r '.value')
 
@@ -64,15 +61,15 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-          # ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t ${{ env.ECR_REGISTRY }}:$IMAGE_TAG .
-          docker push ${{ env.ECR_REGISTRY }}:$IMAGE_TAG
-          echo "image=${{ env.ECR_REGISTRY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
