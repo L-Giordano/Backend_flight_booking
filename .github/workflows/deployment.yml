@@ -1,0 +1,105 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  codeclimate-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          # Set CC_TEST_REPORTER_ID as secret of your repo
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+          JACOCO_SOURCE_PATH: "${{github.workspace}}/src/main/java"
+
+        with:
+          # The report file must be there, otherwise Code Climate won't find it
+          coverageCommand: mvn test
+          coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
+
+
+  set-env:
+
+    with:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      aws-region: us-east-1a
+      
+      run: |
+            aws s3 cp s3://f-booking-terraform-remote-state/ecr-fb-state/terraform.tfstate .
+            export ECR_REPOSITORY=$(aws terraform output -json -state=terraform.tfstate ecr-repository_name | jq -r '.value')
+
+            aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
+            export ECS_SERVICE=$(aws terraform output -json -state=terraform.tfstate ecs_service_name | jq -r '.value')
+
+            aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
+            export ECS_CLUSTER=$(aws terraform output -json -state=terraform.tfstate aws_ecs_cluster_name | jq -r '.value')
+
+            aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
+            export CONTAINER_NAME=$(aws terraform output -json -state=terraform.tfstate container_name | jq -r '.value')
+
+            aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
+            export ECS_TASK_DEFINITION=$(aws terraform output -json -state=terraform.tfstate task-definition | jq -r '.value')
+
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME }}
+        image: ${{ steps.build-image.outputs.image }}
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
