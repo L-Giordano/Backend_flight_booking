@@ -1,11 +1,11 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:602856215744:task-definition/fb-task-definition:1",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:602856215744:task-definition/fbooking-tesk-definition:1",
     "containerDefinitions": [
         {
             "name": "fbooking-container",
             "image": "602856215744.dkr.ecr.us-east-1.amazonaws.com/fbooking-repository",
             "cpu": 1024,
-            "memory": 512,
+            "memory": 3072,
             "portMappings": [
                 {
                     "name": "fbooking-container-8080-tcp",
@@ -44,7 +44,7 @@
             "ulimits": []
         }
     ],
-    "family": "fb-task-definition",
+    "family": "fbooking-tesk-definition",
     "executionRoleArn": "arn:aws:iam::602856215744:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
     "revision": 1,
@@ -66,18 +66,19 @@
     ],
     "placementConstraints": [],
     "compatibilities": [
-        "EC2"
+        "EC2",
+        "FARGATE"
     ],
     "requiresCompatibilities": [
         "EC2"
     ],
     "cpu": "1024",
-    "memory": "1024",
+    "memory": "3072",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2023-05-01T16:12:17.655Z",
+    "registeredAt": "2023-05-01T17:29:06.548Z",
     "registeredBy": "arn:aws:iam::602856215744:user/Lucas-dev-1",
     "tags": []
 }
