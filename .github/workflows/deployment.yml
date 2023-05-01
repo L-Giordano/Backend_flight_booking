@@ -4,6 +4,14 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: fbooking-repository
+  ECS_SERVICE: fbooking-service
+  ECS_CLUSTER: fbooking-cluster
+  ECS_TASK_DEFINITION: ./task-definition.json
+  CONTAINER_NAME: fbooking-container
+
 permissions:
   contents: read
 
@@ -22,25 +30,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-
-
-    - name: Set environment variables
-      run: |
-            aws s3 cp s3://f-booking-terraform-remote-state/ecr-fb-state/terraform.tfstate .
-            export ECR_REPOSITORY=$(aws terraform output -json -state=terraform.tfstate ecr-repository_name | jq -r '.value')
-
-            aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
-            export ECS_SERVICE=$(aws terraform output -json -state=terraform.tfstate ecs_service_name | jq -r '.value')
-
-            aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
-            export ECS_CLUSTER=$(aws terraform output -json -state=terraform.tfstate aws_ecs_cluster_name | jq -r '.value')
-
-            aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
-            export CONTAINER_NAME=$(aws terraform output -json -state=terraform.tfstate container_name | jq -r '.value')
-
-            aws s3 cp s3://f-booking-terraform-remote-state/ecs-fb-state/terraform.tfstate .
-            export ECS_TASK_DEFINITION=$(aws terraform output -json -state=terraform.tfstate task-definition | jq -r '.value')
+        aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -50,7 +40,6 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: fbooking-backend
         IMAGE_TAG: ${{ github.sha }}
       run: |
         # Build a docker container and
@@ -60,16 +49,12 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-    - name: Download task definition
-      run: |
-        aws ecs describe-task-definition --task-definition fbooking-task-definition --query taskDefinition > task-definition.json
-
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: task-definition.json
-        container-name: ec2-fbooking-backend
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition

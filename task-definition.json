@@ -1,0 +1,88 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:602856215744:task-definition/fbooking-task-definition:8",
+    "containerDefinitions": [
+        {
+            "name": "fbooking-container",
+            "image": "602856215744.dkr.ecr.us-east-1.amazonaws.com/fbooking-repository",
+            "cpu": 1024,
+            "memory": 512,
+            "portMappings": [
+                {
+                    "name": "fbooking-container-8080-tcp",
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "FBOOKING_DB_NAME",
+                    "value": "fb"
+                },
+                {
+                    "name": "FBOOKING_DB_USER",
+                    "value": "user"
+                },
+                {
+                    "name": "DB_INSTANCE_ADDRESS",
+                    "value": "fbooking-database.c8awplh52x60.us-east-1.rds.amazonaws.com"
+                },
+                {
+                    "name": "DB_INSTANCE_PORT",
+                    "value": "3306"
+                },
+                {
+                    "name": "FBOOKING_DB_PASSWORD",
+                    "value": "password"
+                }
+            ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": []
+        }
+    ],
+    "family": "fbooking-task-definition",
+    "executionRoleArn": "arn:aws:iam::602856215744:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 8,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2"
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "1024",
+    "memory": "1024",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2023-05-01T14:41:57.038Z",
+    "registeredBy": "arn:aws:iam::602856215744:user/Lucas-dev-1",
+    "tags": [
+        {
+            "key": "name",
+            "value": "task-definition-fbooking"
+        }
+    ]
+}
