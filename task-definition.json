@@ -1,6 +1,5 @@
-
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:602856215744:task-definition/fbooking-task-definition:8",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:602856215744:task-definition/fb-task-definition:1",
     "containerDefinitions": [
         {
             "name": "fbooking-container",
@@ -45,10 +44,10 @@
             "ulimits": []
         }
     ],
-    "family": "fbooking-task-definition",
+    "family": "fb-task-definition",
     "executionRoleArn": "arn:aws:iam::602856215744:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 8,
+    "revision": 1,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -78,12 +77,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2023-05-01T14:41:57.038Z",
+    "registeredAt": "2023-05-01T16:12:17.655Z",
     "registeredBy": "arn:aws:iam::602856215744:user/Lucas-dev-1",
-    "tags": [
-        {
-            "key": "name",
-            "value": "task-definition-fbooking"
-        }
-    ]
+    "tags": []
 }
