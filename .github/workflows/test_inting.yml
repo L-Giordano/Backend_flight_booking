@@ -1,9 +1,9 @@
 name: only-tests
 on:
   push:
-    branches-ignore:
-      - main
-      - master
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   codeclimate-analysis:
